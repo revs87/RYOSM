@@ -11,6 +11,7 @@
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/app" />
             <option value="$PROJECT_DIR$/core" />
+            <option value="$PROJECT_DIR$/libsodium-jni-aar-1.0.3-20160925.060828-1" />
           </set>
         </option>
         <option name="resolveModulePerSourceSet" value="false" />
