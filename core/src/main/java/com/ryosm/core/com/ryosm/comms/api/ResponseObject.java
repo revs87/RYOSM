@@ -9,19 +9,29 @@ public class ResponseObject implements Serializable {
 
     private static final long serialVersionUID = 7697330253727352850L;
 
-    @SerializedName("Result")
-    private String result;
+    @SerializedName("Response")
+    private String response;
+    @SerializedName("Nonce")
+    private String nonce;
 
-    public ResponseObject(String result) {
-        this.result = result;
+    public ResponseObject(String response, String nonce) {
+        this.response = response;
+        this.nonce = nonce;
     }
 
-    public String getResult() {
-        
-        return result;
+    public String getResponse() {
+        return response;
     }
 
-    public void setResult(String result) {
-        this.result = result;
+    public void setResponse(String response) {
+        this.response = response;
+    }
+
+    public String getNonce() {
+        return nonce;
+    }
+
+    public void setNonce(String nonce) {
+        this.nonce = nonce;
     }
 }

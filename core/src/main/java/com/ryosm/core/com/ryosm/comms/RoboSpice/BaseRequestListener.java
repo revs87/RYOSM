@@ -20,7 +20,7 @@ import com.ryosm.core.com.ryosm.base.CoreBaseFragment;
 import com.ryosm.core.com.ryosm.base.CoreLauncherActivity;
 
 
-public abstract class BaseRequestListener<RESP> implements
+    public abstract class BaseRequestListener<RESP> implements
         PendingRequestListener<RESP>,
         RequestProgressListener {
 

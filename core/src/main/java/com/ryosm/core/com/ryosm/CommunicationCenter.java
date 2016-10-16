@@ -21,7 +21,7 @@ public class CommunicationCenter {
 
     public static final String ServiceRegister = "register.php";
     public static final String ServiceLogin = "login.php";
-    public static final String ServiceCustom = "custom.php";
+    public static final String ServiceCustom = "request.php";
 
     private static final CookieManager cookieManager = new CookieManager();
 

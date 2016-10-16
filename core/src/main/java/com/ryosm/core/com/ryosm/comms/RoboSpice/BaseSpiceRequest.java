@@ -10,7 +10,7 @@ import java.net.HttpCookie;
 import java.util.List;
 
 public abstract class BaseSpiceRequest<REQ, RESP> extends
-        SpringAndroidSpiceRequest<RESP> {
+                                                  SpringAndroidSpiceRequest<RESP> {
 
     private static final String TAG = BaseSpiceRequest.class.getSimpleName();
 
@@ -34,7 +34,7 @@ public abstract class BaseSpiceRequest<REQ, RESP> extends
     protected HttpHeaders createHttpHeaders() {
         HttpHeaders headers = new HttpHeaders();
 
-        headers.add("Content-Type", "application/json; charset=utf-8");
+        headers.add("Content-Type", "application/x-www-form-urlencoded; charset=utf-8");
 
         return headers;
     }

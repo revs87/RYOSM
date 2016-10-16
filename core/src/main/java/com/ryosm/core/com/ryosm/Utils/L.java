@@ -41,6 +41,12 @@ public final class L {
         }
     }
 
+    public static void debug(String b) {
+        if (!Configs.HIDE_VERBOSE_LOGGING) {
+            Log.d("", b);
+        }
+    }
+
     public static void d(String a, String b, Throwable tr) {
         if (!Configs.HIDE_VERBOSE_LOGGING) {
             Log.d(a, b, tr);
@@ -82,4 +88,12 @@ public final class L {
             Log.wtf(a, b, tr);
         }
     }
+
+    public static boolean isLoggable(String a, int b) {
+        if (!Configs.HIDE_VERBOSE_LOGGING) {
+            return Log.isLoggable(a, b);
+        }
+        return false;
+    }
+
 }

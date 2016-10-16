@@ -4,28 +4,28 @@ package com.ryosm.core.com.ryosm.comms.RoboSpice;
 import android.app.Application;
 import android.content.Context;
 
-import com.octo.android.robospice.SpringAndroidSpiceService;
 import com.octo.android.robospice.networkstate.NetworkStateChecker;
 import com.octo.android.robospice.persistence.CacheManager;
 import com.octo.android.robospice.persistence.exception.CacheCreationException;
 import com.ryosm.core.com.ryosm.Configs;
+import com.ryosm.core.com.ryosm.comms.RoboSpice.rest.CoreRestTemplate;
+import com.ryosm.core.com.ryosm.comms.RoboSpice.rest.CoreSpringAndroidSpiceService;
 
 import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.http.converter.ByteArrayHttpMessageConverter;
 import org.springframework.http.converter.FormHttpMessageConverter;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.StringHttpMessageConverter;
-import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
 
 public class CacheableSpringAndroidSpiceService extends
-        SpringAndroidSpiceService {
+                                                CoreSpringAndroidSpiceService {
 
     @Override
-    public RestTemplate createRestTemplate() {
+    public CoreRestTemplate createCoreRestTemplate() {
 
-        RestTemplate restTemplate = new RestTemplate();
+        CoreRestTemplate restTemplate = new CoreRestTemplate();
 
         // Setup connection and read timeouts
         ((SimpleClientHttpRequestFactory) restTemplate.getRequestFactory())

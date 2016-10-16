@@ -1,4 +1,4 @@
-package com.ryosm.core.com.ryosm.comms.api.tasks;
+package com.ryosm.core.com.ryosm.comms.RoboSpice.tasks;
 
 import com.octo.android.robospice.persistence.DurationInMillis;
 import com.octo.android.robospice.persistence.exception.SpiceException;
@@ -7,33 +7,33 @@ import com.ryosm.core.com.ryosm.Configs;
 import com.ryosm.core.com.ryosm.base.CoreBaseActivity;
 import com.ryosm.core.com.ryosm.comms.RoboSpice.BaseRequestListener;
 import com.ryosm.core.com.ryosm.comms.RoboSpice.PostBaseSpiceRequest;
-import com.ryosm.core.com.ryosm.comms.api.requests.RequestLogin;
-import com.ryosm.core.com.ryosm.comms.api.responses.ResponseLogin;
+import com.ryosm.core.com.ryosm.comms.api.requests.RequestRegister;
+import com.ryosm.core.com.ryosm.comms.api.responses.ResponseRegister;
 import com.ryosm.core.com.ryosm.utils.L;
 
-public class LoginTask extends BaseTask<ResponseLogin> {
+public class RegisterTask extends BaseTask<ResponseRegister> {
 
-    private static final String URL = CommunicationCenter.ServiceLogin;
-    private static final String TAG = "LoginTask";
+    private static final String URL = CommunicationCenter.ServiceRegister;
+    private static final String TAG = "RegisterTask";
 
     private final CoreBaseActivity activity;
-    private final LoginListener listener;
+    private final RegisterListener listener;
 
-    public LoginTask(CoreBaseActivity activity, LoginListener listener) {
+    public RegisterTask(CoreBaseActivity activity, RegisterListener listener) {
         this.activity = activity;
         this.listener = listener;
     }
 
-    public interface LoginListener {
-        void onLoginSuccess(ResponseLogin response);
+    public interface RegisterListener {
+        void onRegisterSuccess(ResponseRegister response);
     }
 
-    public void getLogin(RequestLogin request) {
-        PostBaseSpiceRequest<RequestLogin, ResponseLogin> spiceRequest =
-                new PostBaseSpiceRequest<>(ResponseLogin.class, request, URL);
+    public void getRegister(RequestRegister request) {
+        PostBaseSpiceRequest<RequestRegister, ResponseRegister> spiceRequest =
+                new PostBaseSpiceRequest<>(ResponseRegister.class, request, URL);
 
         if (activity != null) {
-            spiceListener = new LoginRequestListener(activity, spiceRequest);
+            spiceListener = new RegisterRequestListener(activity, spiceRequest);
             if (Configs.INFINITE_CACHE) {
                 activity.getSpiceManager().execute(
                         spiceRequest,
@@ -46,9 +46,9 @@ public class LoginTask extends BaseTask<ResponseLogin> {
         }
     }
 
-    private class LoginRequestListener extends BaseRequestListener<ResponseLogin> {
+    private class RegisterRequestListener extends BaseRequestListener<ResponseRegister> {
 
-        public LoginRequestListener(CoreBaseActivity activity, PostBaseSpiceRequest<RequestLogin, ResponseLogin> spiceRequest) {
+        public RegisterRequestListener(CoreBaseActivity activity, PostBaseSpiceRequest<RequestRegister, ResponseRegister> spiceRequest) {
             super(activity, null, spiceRequest);
         }
 
@@ -60,9 +60,9 @@ public class LoginTask extends BaseTask<ResponseLogin> {
         }
 
         @Override
-        public void onSuccess(ResponseLogin response) {
+        public void onSuccess(ResponseRegister response) {
             L.e(TAG, "onSuccess");
-            listener.onLoginSuccess(response);
+            listener.onRegisterSuccess(response);
         }
     }
 }

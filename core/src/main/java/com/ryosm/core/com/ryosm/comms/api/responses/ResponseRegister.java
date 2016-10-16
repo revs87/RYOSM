@@ -6,7 +6,7 @@ import com.ryosm.core.com.ryosm.comms.api.ResponseObject;
 
 import java.io.Serializable;
 
-public class ResponseLogin extends ResponseObject implements Serializable {
+public class ResponseRegister extends ResponseObject implements Serializable {
 
     private static final long serialVersionUID = 7697330253727352850L;
 
@@ -14,7 +14,7 @@ public class ResponseLogin extends ResponseObject implements Serializable {
     private String userToken;
 
 
-    public ResponseLogin(String result, String nonce, String userToken) {
+    public ResponseRegister(String result, String nonce, String userToken) {
         super(result, nonce);
         this.userToken = userToken;
     }
