@@ -4,7 +4,6 @@ import android.os.AsyncTask;
 import android.view.View;
 
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -29,9 +28,10 @@ public class PostTask<RESP> extends AsyncTask<NameValuePair, Void, RESP> {
 
     private Class<RESP> clazzResp;
     protected String url;
+    protected String responseStr;
     protected PostListener postListener = new PostListener() {
         @Override
-        public void onSuccess(Object response) {
+        public void onSuccess(Object response, String responseStr) {
 
         }
 
@@ -72,14 +72,18 @@ public class PostTask<RESP> extends AsyncTask<NameValuePair, Void, RESP> {
             HttpResponse response = httpClient.execute(httpPost);
 
             // Parse response
-            Gson gson = new GsonBuilder().create();
-            String body = EntityUtils.toString(response.getEntity()).trim();
+//            Gson gson = new GsonBuilder().disableHtmlEscaping().create();
+            Gson gson = new Gson();
+            String body = responseStr = EntityUtils.toString(response.getEntity()).trim();
             RESP responseJson = gson.fromJson(body, clazzResp);
 
+
             // Response details
-            String responseStr = response.getStatusLine() + "\n\n" + body;
+            String responseInfo = response.getStatusLine() + "\n\n" + body;
 
             return responseJson;
+        } catch (IllegalStateException e) {
+            postListener.onFail(e);
         } catch (ClientProtocolException e) {
             postListener.onFail(e);
         } catch (IOException e) {
@@ -104,7 +108,7 @@ public class PostTask<RESP> extends AsyncTask<NameValuePair, Void, RESP> {
 
         if (response != null) {
             try {
-                postListener.onSuccess(response);
+                postListener.onSuccess(response, responseStr);
             } catch (Exception e) {
                 postListener.onFail(e);
             }
@@ -113,4 +117,48 @@ public class PostTask<RESP> extends AsyncTask<NameValuePair, Void, RESP> {
         }
     }
 
+}
+
+class DataWrapper {
+    public Data data;
+
+    public static DataWrapper fromJson(String s) {
+        return new Gson().fromJson(s, DataWrapper.class);
+    }
+
+    public String toString() {
+        return new Gson().toJson(this);
+    }
+}
+
+class Data {
+    public List<Translation> translations;
+
+    public Data(List<Translation> translations) {
+        this.translations = translations;
+    }
+
+    public List<Translation> getTranslations() {
+        return translations;
+    }
+
+    public void setTranslations(List<Translation> translations) {
+        this.translations = translations;
+    }
+}
+
+class Translation {
+    public String translatedText;
+
+    public Translation(String translatedText) {
+        this.translatedText = translatedText;
+    }
+
+    public String getTranslatedText() {
+        return translatedText;
+    }
+
+    public void setTranslatedText(String translatedText) {
+        this.translatedText = translatedText;
+    }
 }

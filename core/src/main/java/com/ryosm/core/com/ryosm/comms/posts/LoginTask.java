@@ -2,6 +2,7 @@ package com.ryosm.core.com.ryosm.comms.posts;
 
 import android.view.View;
 
+import com.ryosm.core.com.ryosm.comms.api.ResponseObject;
 import com.ryosm.core.com.ryosm.comms.api.responses.ResponseLogin;
 
 import org.apache.http.message.BasicNameValuePair;
@@ -35,7 +36,8 @@ public class LoginTask extends MessageTask<ResponseLogin> {
     public PostListener getExtendedPostListener() {
         return new PostListener() {
             @Override
-            public void onSuccess(Object response) {
+            public void onSuccess(Object response, String responseStr) {
+                ((ResponseLogin) response).setResponseStr(responseStr);
                 loginListener.onSuccess((ResponseLogin) response);
             }
 

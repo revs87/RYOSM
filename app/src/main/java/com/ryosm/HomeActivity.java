@@ -5,8 +5,10 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.ryosm.base.BaseActivity;
 import com.ryosm.core.com.ryosm.CommunicationCenter;
+import com.ryosm.core.com.ryosm.base.CoreLauncherActivity;
+import com.ryosm.core.com.ryosm.comms.api.requests.RequestLogin;
+import com.ryosm.core.com.ryosm.comms.api.requests.RequestObject;
 import com.ryosm.core.com.ryosm.comms.api.responses.ResponseLogin;
 import com.ryosm.core.com.ryosm.comms.posts.LoginTask;
 import com.ryosm.core.com.ryosm.utils.L;
@@ -15,7 +17,7 @@ import com.ryosm.core.com.ryosm.utils.L;
  * Created by revs on 14/10/2016.
  */
 
-public class HomeActivity extends BaseActivity {
+public class HomeActivity extends CoreLauncherActivity {
 
     private TextView loginTv;
     private Button loginBtn;
@@ -37,27 +39,40 @@ public class HomeActivity extends BaseActivity {
                  *
                  * */
                 loginTv.setText("");
+
+                RequestLogin request = getCore().getRyoLibsodium().getRequestLogin("rui", "lala");
+
                 new com.ryosm.core.com.ryosm.comms.posts.LoginTask(
-//                        CommunicationCenter.getBaseUrl() + "/request.php",
-                        CommunicationCenter.getBaseUrl() + "/login.php",
-                        "wcrkdCGL+hhdJy0SCvrBuJ+HVSGkT5APwobYPD8zXkq9NWNyOSK0UpXY+yIrU71+DO9I65waJ54bkHVCKSnNNJvsEuhogypQUtLBoIZpbQFGS1pOj8hRZDta7Lb393syCVy3wd4mpIvQQpQ3ql4O",
-                        "1NfmmgP0Jt3Edu2/HHhpcKuoisMI0j+5",
-                        "hu3vlJQqK4G/JXxb2dC/sU6E6aZmmUibNBQa7T8Q50g=",
+                        CommunicationCenter.getBaseUrl() + "/" + CommunicationCenter.ServiceLogin,
+                        request.getMessage(),
+                        request.getNonce(),
+                        request.getPublicKey(),
                         loadingView,
                         new LoginTask.LoginListener() {
                             @Override
-                            public void onSuccess(ResponseLogin response) {
+                            public void onSuccess(final ResponseLogin response) {
                                 L.d("onSuccess", "");
-                                loginTv.setText(
-                                        "Response:\n\nResponse: " + response.getResponse()
-                                                + "\nNonce: " + response.getNonce()
-                                                + "\nUserToken: " + response.getUserToken()
-                                );
+                                final String responseStr = getCore().getRyoLibsodium().decryptObject(response);
+                                runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        loginTv.setText(
+                                                "All:\n\nResponseEncrypted: \n" + response.getResponse()
+                                                        + "\n\n" +
+                                                        "Nonce: \n" + response.getNonce()
+                                                        + "\n\n" +
+                                                        "Response: \n" + responseStr
+                                        );
+                                    }
+                                });
+
+
                             }
 
                             @Override
                             public void onFail(Exception e) {
-                                L.d("onFail", e.getMessage());
+                                L.d("onFail", "");
+                                e.printStackTrace();
 
                             }
                         }).postTaskExecute();

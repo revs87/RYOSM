@@ -5,6 +5,7 @@ import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
 
+//TODO
 public class RequestRegister implements Serializable {
 
     private static final long serialVersionUID = 7697330253727352850L;

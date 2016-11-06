@@ -8,20 +8,14 @@ import java.net.CookieManager;
 
 public class CommunicationCenter {
 
-    /* ENDPOINTS ---------(set here ONLY.)--------- */
-    public static final String TEST_SERVER_URL = "https://qkhxbpkjp45uvi7n.onion.to";
-    public static final String TEST_SERVER_URL2 = "http://bim2.itsector.pt";
-    public static final String QUA_SERVER_URL = "http://192.168.17.47:8080/mbim_json";
-    public static final String TEST_SERVER_LOGIN = "http://192.168.17.47:8080/mbim_json2";
-    public static final String PRD_SERVER_URL_HTTP = "http://smartizi.millenniumbim.co.mz/mbim_json";
-    public static final String PRD_SERVER_URL_HTTPS = "https://smartizi.millenniumbim.co.mz/mbim_json";
-    public static final String PRD_SERVER_URL = "https://smartizi.millenniumbim.co.mz/mbim_json_p";
+
+    public static final String TEST_SERVER_URL = "https://messenger-dev.hackersanonymous.net";
 
     /* -------------------------------------------- */
 
     public static final String ServiceRegister = "register.php";
     public static final String ServiceLogin = "login.php";
-    public static final String ServiceCustom = "request.php";
+    public static final String ServiceCustom = "custom.php";
 
     private static final CookieManager cookieManager = new CookieManager();
 

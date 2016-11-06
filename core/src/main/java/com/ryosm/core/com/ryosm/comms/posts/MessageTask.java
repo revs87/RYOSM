@@ -53,7 +53,8 @@ public class MessageTask<RESP> {
     public PostListener getExtendedPostListener() {
         return new PostListener() {
             @Override
-            public void onSuccess(Object response) {
+            public void onSuccess(Object response, String responseStr) {
+                ((ResponseObject) response).setResponseStr(responseStr);
                 messageListener.onSuccess((ResponseObject) response);
             }
 

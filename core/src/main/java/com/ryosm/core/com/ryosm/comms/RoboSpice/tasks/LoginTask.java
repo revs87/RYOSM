@@ -7,7 +7,7 @@ import com.ryosm.core.com.ryosm.Configs;
 import com.ryosm.core.com.ryosm.base.CoreBaseActivity;
 import com.ryosm.core.com.ryosm.comms.RoboSpice.BaseRequestListener;
 import com.ryosm.core.com.ryosm.comms.RoboSpice.PostBaseSpiceRequest;
-import com.ryosm.core.com.ryosm.comms.api.requests.RequestLogin;
+import com.ryosm.core.com.ryosm.comms.api.requests.RequestLoginObj;
 import com.ryosm.core.com.ryosm.comms.api.responses.ResponseLogin;
 import com.ryosm.core.com.ryosm.utils.L;
 
@@ -28,8 +28,8 @@ public class LoginTask extends BaseTask<ResponseLogin> {
         void onLoginSuccess(ResponseLogin response);
     }
 
-    public void getLogin(RequestLogin request) {
-        PostBaseSpiceRequest<RequestLogin, ResponseLogin> spiceRequest =
+    public void getLogin(RequestLoginObj request) {
+        PostBaseSpiceRequest<RequestLoginObj, ResponseLogin> spiceRequest =
                 new PostBaseSpiceRequest<>(ResponseLogin.class, request, URL);
 
         if (activity != null) {
@@ -48,7 +48,7 @@ public class LoginTask extends BaseTask<ResponseLogin> {
 
     private class LoginRequestListener extends BaseRequestListener<ResponseLogin> {
 
-        public LoginRequestListener(CoreBaseActivity activity, PostBaseSpiceRequest<RequestLogin, ResponseLogin> spiceRequest) {
+        public LoginRequestListener(CoreBaseActivity activity, PostBaseSpiceRequest<RequestLoginObj, ResponseLogin> spiceRequest) {
             super(activity, null, spiceRequest);
         }
 

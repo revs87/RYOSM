@@ -1,7 +1,7 @@
 package com.ryosm.core.com.ryosm.comms.Retrofit;
 
 import com.ryosm.core.com.ryosm.CommunicationCenter;
-import com.ryosm.core.com.ryosm.comms.api.requests.RequestLogin;
+import com.ryosm.core.com.ryosm.comms.api.requests.RequestLoginObj;
 import com.ryosm.core.com.ryosm.comms.api.responses.ResponseLogin;
 import com.ryosm.core.com.ryosm.utils.L;
 
@@ -36,7 +36,7 @@ public class LoginServiceGenerator {
         return createService(serviceClass, null);
     }
 
-    public static <S> S createService(Class<S> serviceClass, RequestLogin requestLogin) {
+    public static <S> S createService(Class<S> serviceClass, RequestLoginObj requestLogin) {
 
         httpClient.addInterceptor(new Interceptor() {
             @Override
@@ -64,7 +64,7 @@ public class LoginServiceGenerator {
 
     public void getLogin() {
         LoginService loginService =
-                LoginServiceGenerator.createService(LoginService.class, new RequestLogin("", "", ""));
+                LoginServiceGenerator.createService(LoginService.class, new RequestLoginObj("", "", ""));
         Call<ResponseLogin> call = loginService.login();
         call.enqueue(new Callback<ResponseLogin>() {
             @Override
