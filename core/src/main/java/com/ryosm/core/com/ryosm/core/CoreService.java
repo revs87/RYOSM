@@ -1,8 +1,14 @@
 package com.ryosm.core.com.ryosm.core;
 
+import android.app.Activity;
+import android.app.Notification;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.Service;
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.net.ConnectivityManager;
 import android.os.Binder;
 import android.os.IBinder;
@@ -15,29 +21,29 @@ import android.support.annotation.Nullable;
 public class CoreService extends Service {
 
 
+    private static final int NOTIFICATION_ID = 12341234;
+    private Context context;
     private Core core = null;
     private NotificationManager notificationManager;
     private ConnectivityManager connectivityManager;
     private SocketManager socketManager;
     private boolean foregroundModeEnabled;
     private String androidId;
+    private Notification.Builder m_notificationBuilder;
 
-    @Override
-    public void onCreate() {
-
-        notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-        connectivityManager = (ConnectivityManager) getSystemService(CONNECTIVITY_SERVICE);
-        socketManager = new SocketManager();
-
-        androidId = Settings.Secure.getString(this.getContentResolver(), Settings.Secure.ANDROID_ID);
-
-        core = new Core(this);
+    public CoreService() {
     }
 
-    @Override
-    public void onDestroy() {
-        core = null;
-        super.onDestroy();
+    public CoreService(Context context) {
+        this.context = context;
+
+        notificationManager = (NotificationManager) context.getSystemService(NOTIFICATION_SERVICE);
+        connectivityManager = (ConnectivityManager) context.getSystemService(CONNECTIVITY_SERVICE);
+        socketManager = new SocketManager();
+
+        androidId = Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
+
+        core = new Core();
     }
 
     private void showNotification() {
@@ -45,10 +51,14 @@ public class CoreService extends Service {
     }
 
     /**
-     * Gets
-     * */
+     * Gets Sets
+     */
     public Core getCore() {
         return core;
+    }
+
+    public void setCore(Core core) {
+        this.core = core;
     }
 
     public String getAndroidId() {
@@ -69,7 +79,7 @@ public class CoreService extends Service {
 
     /**
      * Binder
-     * */
+     */
     private final IBinder binder = new CoreServiceBinder();
 
     public IBinder getBinder() {
@@ -87,4 +97,51 @@ public class CoreService extends Service {
     public IBinder onBind(Intent intent) {
         return binder;
     }
+
+
+    /**
+     *
+     * */
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
+        return START_STICKY;
+    }
+
+    private CoreService m_service;
+
+    private ServiceConnection m_serviceConnection = new ServiceConnection() {
+        public void onServiceConnected(ComponentName className, IBinder service) {
+            m_service = ((CoreService.CoreServiceBinder) service).getService();
+        }
+
+        public void onServiceDisconnected(ComponentName className) {
+            m_service = null;
+        }
+    };
+
+    public ServiceConnection getM_serviceConnection() {
+        return m_serviceConnection;
+    }
+
+//    private void addNotification(Activity activity) {
+//        // create the notification
+//        m_notificationBuilder = new Notification.Builder(activity)
+//                .setContentTitle("Service name")
+//                .setContentText("service_status_monitor")
+//                .setSmallIcon(android.R.drawable.ic_dialog_alert);
+//
+//        // create the pending intent and add to the notification
+//        Intent intent = new Intent(activity, CoreService.class);
+//        PendingIntent pendingIntent = PendingIntent.getActivity(activity, 0, intent, 0);
+//        m_notificationBuilder.setContentIntent(pendingIntent);
+//
+//        // send the notification
+//        notificationManager.notify(NOTIFICATION_ID, m_notificationBuilder.build());
+//    }
+//
+//    public void addNotificationToForeground(Activity activity) {
+//        addNotification(activity);
+//        startForeground(NOTIFICATION_ID, m_notificationBuilder.build());
+//    }
+
 }

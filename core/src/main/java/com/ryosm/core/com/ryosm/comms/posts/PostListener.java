@@ -9,7 +9,7 @@ public abstract class PostListener<RESP> {
     public PostListener() {
     }
 
-    public abstract void onSuccess(RESP response);
+    public abstract void onSuccess(RESP response, String responseStr);
 
     public abstract void onFail(Exception e);
 

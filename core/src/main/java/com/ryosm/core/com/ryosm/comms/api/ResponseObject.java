@@ -8,14 +8,24 @@ import java.io.Serializable;
 public class ResponseObject implements Serializable {
 
     private static final long serialVersionUID = 7697330253727352850L;
+    private String responseStr;
 
-    @SerializedName("Response")
-    private String response;
     @SerializedName("Nonce")
     private String nonce;
+    @SerializedName("Response")
+    private String response;
 
-    public ResponseObject(String response, String nonce) {
+
+    public ResponseObject(String nonce, String response) {
+        this.nonce = nonce;
         this.response = response;
+    }
+
+    public String getNonce() {
+        return nonce;
+    }
+
+    public void setNonce(String nonce) {
         this.nonce = nonce;
     }
 
@@ -27,11 +37,7 @@ public class ResponseObject implements Serializable {
         this.response = response;
     }
 
-    public String getNonce() {
-        return nonce;
-    }
-
-    public void setNonce(String nonce) {
-        this.nonce = nonce;
+    public void setResponseStr(String responseStr) {
+        this.responseStr = responseStr;
     }
 }
