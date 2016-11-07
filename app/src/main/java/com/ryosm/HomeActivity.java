@@ -3,14 +3,16 @@ package com.ryosm;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import com.ryosm.core.com.ryosm.CommunicationCenter;
 import com.ryosm.core.com.ryosm.base.CoreLauncherActivity;
 import com.ryosm.core.com.ryosm.comms.api.requests.RequestLogin;
-import com.ryosm.core.com.ryosm.comms.api.requests.RequestObject;
 import com.ryosm.core.com.ryosm.comms.api.responses.ResponseLogin;
+import com.ryosm.core.com.ryosm.comms.api.responses.ResponseRegister;
 import com.ryosm.core.com.ryosm.comms.posts.LoginTask;
+import com.ryosm.core.com.ryosm.comms.posts.RegisterTask;
 import com.ryosm.core.com.ryosm.utils.L;
 
 /**
@@ -19,9 +21,12 @@ import com.ryosm.core.com.ryosm.utils.L;
 
 public class HomeActivity extends CoreLauncherActivity {
 
-    private TextView loginTv;
+    private TextView messageTv;
+    private Button registerBtn;
     private Button loginBtn;
     private View loadingView;
+    private EditText usernameEt;
+    private EditText passwordEt;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,7 +34,9 @@ public class HomeActivity extends CoreLauncherActivity {
         setContentView(R.layout.activity_home);
 
         loadingView = findViewById(R.id.loading_view);
-        loginTv = (TextView) findViewById(R.id.home_login_tv);
+        usernameEt = (EditText) findViewById(R.id.home_username_et);
+        passwordEt = (EditText) findViewById(R.id.home_password_et);
+        messageTv = (TextView) findViewById(R.id.home_message_tv);
         loginBtn = (Button) findViewById(R.id.home_login_btn);
         loginBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -38,35 +45,29 @@ public class HomeActivity extends CoreLauncherActivity {
                 /**
                  *
                  * */
-                loginTv.setText("");
+                messageTv.setText("");
 
-                RequestLogin request = getCore().getRyoLibsodium().getRequestLogin("rui", "lala");
+                RequestLogin request = getCore().getRyoLibsodium().getRequestLogin(
+                        usernameEt.getText().toString().trim(),
+                        passwordEt.getText().toString().trim());
 
                 new com.ryosm.core.com.ryosm.comms.posts.LoginTask(
                         CommunicationCenter.getBaseUrl() + "/" + CommunicationCenter.ServiceLogin,
-                        request.getMessage(),
-                        request.getNonce(),
-                        request.getPublicKey(),
+                        usernameEt.getText().toString().trim(),
+                        request,
                         loadingView,
                         new LoginTask.LoginListener() {
                             @Override
                             public void onSuccess(final ResponseLogin response) {
                                 L.d("onSuccess", "");
-                                final String responseStr = getCore().getRyoLibsodium().decryptObject(response);
                                 runOnUiThread(new Runnable() {
                                     @Override
                                     public void run() {
-                                        loginTv.setText(
-                                                "All:\n\nResponseEncrypted: \n" + response.getResponse()
-                                                        + "\n\n" +
-                                                        "Nonce: \n" + response.getNonce()
-                                                        + "\n\n" +
-                                                        "Response: \n" + responseStr
+                                        messageTv.setText(
+                                                "Response:\n" + response.getResponseStr()
                                         );
                                     }
                                 });
-
-
                             }
 
                             @Override
@@ -79,5 +80,47 @@ public class HomeActivity extends CoreLauncherActivity {
             }
         });
 
+
+        registerBtn = (Button) findViewById(R.id.home_register_btn);
+        registerBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                /**
+                 *
+                 * */
+                messageTv.setText("");
+
+                RequestLogin request = getCore().getRyoLibsodium().getRequestLogin(
+                        usernameEt.getText().toString().trim(),
+                        passwordEt.getText().toString().trim());
+
+                new com.ryosm.core.com.ryosm.comms.posts.RegisterTask(
+                        CommunicationCenter.getBaseUrl() + "/" + CommunicationCenter.ServiceRegister,
+                        request,
+                        loadingView,
+                        new RegisterTask.RegisterListener() {
+                            @Override
+                            public void onSuccess(final ResponseRegister response) {
+                                L.d("onSuccess", "");
+                                runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        messageTv.setText(
+                                                "Response:\n" + response.getResponseStr()
+                                        );
+                                    }
+                                });
+                            }
+
+                            @Override
+                            public void onFail(Exception e) {
+                                L.d("onFail", "");
+                                e.printStackTrace();
+
+                            }
+                        }).postTaskExecute();
+
+            }
+        });
     }
 }

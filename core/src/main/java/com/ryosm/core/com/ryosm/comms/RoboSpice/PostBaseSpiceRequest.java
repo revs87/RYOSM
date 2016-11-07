@@ -9,7 +9,7 @@ import com.ryosm.core.com.ryosm.Configs;
 import com.ryosm.core.com.ryosm.utils.L;
 import com.ryosm.core.com.ryosm.base.CoreLauncherActivity;
 import com.ryosm.core.com.ryosm.objects.KeyValueObject;
-import com.ryosm.core.com.ryosm.comms.api.ResponseObject;
+import com.ryosm.core.com.ryosm.comms.api.Response;
 
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -23,7 +23,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
-public class PostBaseSpiceRequest<REQ, RESP extends ResponseObject> extends
+public class PostBaseSpiceRequest<REQ, RESP extends Response> extends
         BaseSpiceRequest<REQ, RESP> {
 
     private static final String TAG = PostBaseSpiceRequest.class
@@ -94,9 +94,9 @@ public class PostBaseSpiceRequest<REQ, RESP extends ResponseObject> extends
 
         // Get response
         String body = response.getBody();
-        L.d(TAG, "Response URL: \n"
+        L.d(TAG, "ResponseObj URL: \n"
                 + url + "\n"
-                + "Response Body: \n"
+                + "ResponseObj Body: \n"
                 + body);
         if (Configs.LOG_TO_FILE) {
             Date now = new Date(); // java.util.Date, NOT java.sql.Date or
@@ -120,9 +120,9 @@ public class PostBaseSpiceRequest<REQ, RESP extends ResponseObject> extends
          * Decrypt layer
          * */
         //TODO
-//        if (!responseObject.getStatus().equals(ResponseObject.OK)) {
+//        if (!responseObject.getStatus().equals(Response.OK)) {
 
-        L.d(TAG, "Response content: \n" + gson.toJson(responseObject));
+        L.d(TAG, "ResponseObj content: \n" + gson.toJson(responseObject));
 
         return responseObject;
 

@@ -4,6 +4,8 @@ import android.os.AsyncTask;
 import android.view.View;
 
 import com.google.gson.Gson;
+import com.ryosm.core.com.ryosm.comms.api.Response;
+import com.ryosm.core.com.ryosm.utils.L;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -19,6 +21,8 @@ import org.apache.http.util.EntityUtils;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.ryosm.core.com.ryosm.base.CoreLauncherActivity.getCore;
 
 /**
  * Created by revs on 16/10/2016.
@@ -68,18 +72,45 @@ public class PostTask<RESP> extends AsyncTask<NameValuePair, Void, RESP> {
             }
             httpPost.setEntity(new UrlEncodedFormEntity(nameValuePairs, HTTP.UTF_8));
 
+
+            /**
+             * Print request
+             * */
+            String requestStr = "{";
+            for (int i = 0; i < data.length; i++) {
+                if (i == 0) {
+                    requestStr = requestStr + "\"" + data[i].getName() + "\"" + ":" + "\"" + data[i].getValue() + "\"";
+                } else {
+                    requestStr = requestStr + ", " + "\"" + data[i].getName() + "\"" + ":" + "\"" + data[i].getValue() + "\"";
+                }
+            }
+            requestStr = requestStr + "}";
+            L.d("PostTask", "Request:\n"
+//                    + "Encrypted:" + body + "\n"
+//                    + "Decrypted:" + responseStrDecrypted
+                            + requestStr
+            );
+
+
             // Execute HTTP Post Request
             HttpResponse response = httpClient.execute(httpPost);
 
             // Parse response
-//            Gson gson = new GsonBuilder().disableHtmlEscaping().create();
             Gson gson = new Gson();
             String body = responseStr = EntityUtils.toString(response.getEntity()).trim();
             RESP responseJson = gson.fromJson(body, clazzResp);
 
 
-            // Response details
-            String responseInfo = response.getStatusLine() + "\n\n" + body;
+            /**
+             * Print response
+             * */
+            String responseStatus = response.getStatusLine() + "";
+            String responseStrDecrypted = getCore().getRyoLibsodium().decryptObject((Response) responseJson);
+            //((Response) response).setResponseStr(responseStrDecrypted);
+            L.d("PostTask", "Response(" + responseStatus + "):\n"
+                    + "Encrypted:" + body + "\n"
+                    + "Decrypted:" + responseStrDecrypted
+            );
 
             return responseJson;
         } catch (IllegalStateException e) {
@@ -117,48 +148,4 @@ public class PostTask<RESP> extends AsyncTask<NameValuePair, Void, RESP> {
         }
     }
 
-}
-
-class DataWrapper {
-    public Data data;
-
-    public static DataWrapper fromJson(String s) {
-        return new Gson().fromJson(s, DataWrapper.class);
-    }
-
-    public String toString() {
-        return new Gson().toJson(this);
-    }
-}
-
-class Data {
-    public List<Translation> translations;
-
-    public Data(List<Translation> translations) {
-        this.translations = translations;
-    }
-
-    public List<Translation> getTranslations() {
-        return translations;
-    }
-
-    public void setTranslations(List<Translation> translations) {
-        this.translations = translations;
-    }
-}
-
-class Translation {
-    public String translatedText;
-
-    public Translation(String translatedText) {
-        this.translatedText = translatedText;
-    }
-
-    public String getTranslatedText() {
-        return translatedText;
-    }
-
-    public void setTranslatedText(String translatedText) {
-        this.translatedText = translatedText;
-    }
 }

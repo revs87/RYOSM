@@ -4,7 +4,7 @@ import android.view.View;
 
 import com.ryosm.core.com.ryosm.comms.RoboSpice.BaseRequestListener;
 
-public class BaseTask<T> {
+public class BaseRSTask<T> {
 
     protected BaseRequestListener<T> spiceListener;
 

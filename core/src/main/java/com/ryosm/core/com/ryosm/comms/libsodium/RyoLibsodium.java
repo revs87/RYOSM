@@ -3,7 +3,7 @@ package com.ryosm.core.com.ryosm.comms.libsodium;
 import android.util.Base64;
 
 import com.google.gson.Gson;
-import com.ryosm.core.com.ryosm.comms.api.ResponseObject;
+import com.ryosm.core.com.ryosm.comms.api.Response;
 import com.ryosm.core.com.ryosm.comms.api.requests.RequestLogin;
 import com.ryosm.core.com.ryosm.comms.api.requests.RequestLoginObj;
 import com.ryosm.core.com.ryosm.comms.api.requests.RequestObject;
@@ -149,7 +149,7 @@ public class RyoLibsodium {
         );
     }
 
-    public String decryptObject(ResponseObject responseObject) {
+    public String decryptObject(Response responseObject) {
         byte[] message = kpBox.decrypt(
                 decode64(responseObject.getNonce()),
                 decode64(responseObject.getResponse()));
@@ -166,7 +166,7 @@ public class RyoLibsodium {
         );
     }
 
-    public String decryptXObject(ResponseObject responseObject) {
+    public String decryptXObject(Response responseObject) {
         byte[] message = xBox.decrypt(
                 decode64(responseObject.getNonce()),
                 decode64(responseObject.getResponse()));

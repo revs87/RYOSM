@@ -1,7 +1,6 @@
 package com.ryosm.core.com.ryosm.base;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -28,8 +27,8 @@ public class CoreLauncherActivity extends AppCompatActivity {
          * CoreService
          * */
         service = new CoreService(this);
-        Intent intent = new Intent(this, CoreService.class);
-        bindService(intent, service.getM_serviceConnection(), BIND_AUTO_CREATE);
+//        Intent intent = new Intent(this, CoreService.class);
+//        bindService(intent, service.getM_serviceConnection(), BIND_AUTO_CREATE);
 
 
     }

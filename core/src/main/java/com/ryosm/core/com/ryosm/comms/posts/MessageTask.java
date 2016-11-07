@@ -2,7 +2,7 @@ package com.ryosm.core.com.ryosm.comms.posts;
 
 import android.view.View;
 
-import com.ryosm.core.com.ryosm.comms.api.ResponseObject;
+import com.ryosm.core.com.ryosm.comms.api.Response;
 
 import org.apache.http.message.BasicNameValuePair;
 
@@ -54,8 +54,8 @@ public class MessageTask<RESP> {
         return new PostListener() {
             @Override
             public void onSuccess(Object response, String responseStr) {
-                ((ResponseObject) response).setResponseStr(responseStr);
-                messageListener.onSuccess((ResponseObject) response);
+                ((Response) response).setResponseStr(responseStr);
+                messageListener.onSuccess((Response) response);
             }
 
             @Override
@@ -66,14 +66,14 @@ public class MessageTask<RESP> {
     }
 
     public interface MessageListener {
-        void onSuccess(ResponseObject response);
+        void onSuccess(Response response);
 
         void onFail(Exception e);
     }
 
     public class NullMessageListener implements MessageListener {
         @Override
-        public void onSuccess(ResponseObject response) {
+        public void onSuccess(Response response) {
 
         }
 

@@ -12,8 +12,10 @@ public class PersistentData {
 
     // Persistent Data
     private static PersistentData persistentData;
-    private String username;
     private SQLiteHelper databaseHelper;
+    private String username;
+    private String userToken;
+    private String csrf;
 
     /**
      * Constructor
@@ -31,6 +33,15 @@ public class PersistentData {
         return persistentData;
     }
 
+    public void initDatabaseHelper(Context context) {
+        databaseHelper = new SQLiteHelper(context);
+    }
+
+
+    public SQLiteHelper getDatabaseHelper() {
+        return databaseHelper;
+    }
+
     public String getUsername() {
         return username;
     }
@@ -39,13 +50,19 @@ public class PersistentData {
         this.username = username;
     }
 
-
-    public void initDatabaseHelper(Context context) {
-        databaseHelper = new SQLiteHelper(context);
+    public String getUserToken() {
+        return userToken;
     }
 
-    public SQLiteHelper getDatabaseHelper() {
-        return databaseHelper;
+    public void setUserToken(String userToken) {
+        this.userToken = userToken;
     }
 
+    public String getCsrf() {
+        return csrf;
+    }
+
+    public void setCsrf(String csrf) {
+        this.csrf = csrf;
+    }
 }
