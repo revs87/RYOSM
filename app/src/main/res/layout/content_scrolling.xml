@@ -13,17 +13,63 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <Button
-            android:id="@+id/home_login_btn"
-            android:layout_width="wrap_content"
-            android:layout_height="45dp"
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:layout_margin="20dp"
-            android:text="Login" />
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="user:" />
+
+            <EditText
+                android:id="@+id/home_username_et"
+                android:layout_width="100dp"
+                android:layout_height="45dp"
+                android:layout_margin="20dp"
+                android:text="rui" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="pass:" />
+
+            <EditText
+                android:id="@+id/home_password_et"
+                android:layout_width="100dp"
+                android:layout_height="45dp"
+                android:layout_margin="20dp"
+                android:text="lala" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/home_login_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="45dp"
+                android:layout_margin="20dp"
+                android:text="Login" />
+
+            <Button
+                android:id="@+id/home_register_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="45dp"
+                android:text="Register" />
+        </LinearLayout>
 
         <TextView
-            android:id="@+id/home_login_tv"
+            android:id="@+id/home_message_tv"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="20dp" />
+
     </LinearLayout>
 </android.support.v4.widget.NestedScrollView>

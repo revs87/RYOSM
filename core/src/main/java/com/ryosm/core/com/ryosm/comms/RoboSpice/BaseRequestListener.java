@@ -12,8 +12,8 @@ import com.octo.android.robospice.request.listener.PendingRequestListener;
 import com.octo.android.robospice.request.listener.RequestProgress;
 import com.octo.android.robospice.request.listener.RequestProgressListener;
 import com.octo.android.robospice.request.listener.RequestStatus;
+import com.ryosm.core.com.ryosm.comms.api.Response;
 import com.ryosm.core.com.ryosm.utils.L;
-import com.ryosm.core.com.ryosm.comms.api.ResponseObject;
 import com.ryosm.core.com.ryosm.base.CoreBaseActivity;
 import com.ryosm.core.com.ryosm.base.CoreBaseDialogFragment;
 import com.ryosm.core.com.ryosm.base.CoreBaseFragment;
@@ -80,20 +80,20 @@ import com.ryosm.core.com.ryosm.base.CoreLauncherActivity;
 
 
         try {
-            if (response instanceof ResponseObject) {
-                ResponseObject responseObj = (ResponseObject) response;
+            if (response instanceof Response) {
+                Response responseObj = (Response) response;
             }
 
             // Message Ok
             status = IDLE;
             updateUI(rootView);
         } catch (ClassCastException e) {
-            L.wtf(TAG, "RESP Generic class not instance of ResponseObject", e);
+            L.wtf(TAG, "RESP Generic class not instance of Response", e);
             return;
         } catch (NullPointerException e) {
             status = IDLE;
             updateUI(rootView);
-            L.w(TAG, "Response message incomplete", e);
+            L.w(TAG, "ResponseObj message incomplete", e);
         }
 
     }

@@ -5,9 +5,10 @@ import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
 
-public class ResponseObject implements Serializable {
+public class Response implements Serializable {
 
     private static final long serialVersionUID = 7697330253727352850L;
+
     private String responseStr;
 
     @SerializedName("Nonce")
@@ -16,7 +17,7 @@ public class ResponseObject implements Serializable {
     private String response;
 
 
-    public ResponseObject(String nonce, String response) {
+    public Response(String nonce, String response) {
         this.nonce = nonce;
         this.response = response;
     }
@@ -35,6 +36,10 @@ public class ResponseObject implements Serializable {
 
     public void setResponse(String response) {
         this.response = response;
+    }
+
+    public String getResponseStr() {
+        return responseStr;
     }
 
     public void setResponseStr(String responseStr) {

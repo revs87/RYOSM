@@ -1,15 +1,35 @@
 
 package com.ryosm.core.com.ryosm.comms.api.responses;
 
-import com.ryosm.core.com.ryosm.comms.api.ResponseObject;
+import com.google.gson.annotations.SerializedName;
+import com.ryosm.core.com.ryosm.comms.api.ResponseObj;
 
-import java.io.Serializable;
+public class ResponseLogin extends ResponseObj {
 
-public class ResponseLogin extends ResponseObject implements Serializable {
+    @SerializedName("UserToken")
+    private String userToken;
+    @SerializedName("CSRF")
+    private String csrf;
 
-    private static final long serialVersionUID = 7697330253727352850L;
+    public ResponseLogin(String nonce, String response, String userToken, String csrf) {
+        super(nonce, response);
+        this.userToken = userToken;
+        this.csrf = csrf;
+    }
 
-    public ResponseLogin(String result, String nonce) {
-        super(result, nonce);
+    public String getUserToken() {
+        return userToken;
+    }
+
+    public void setUserToken(String userToken) {
+        this.userToken = userToken;
+    }
+
+    public String getCsrf() {
+        return csrf;
+    }
+
+    public void setCsrf(String csrf) {
+        this.csrf = csrf;
     }
 }

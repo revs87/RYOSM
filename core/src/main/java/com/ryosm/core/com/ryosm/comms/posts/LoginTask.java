@@ -2,43 +2,59 @@ package com.ryosm.core.com.ryosm.comms.posts;
 
 import android.view.View;
 
-import com.ryosm.core.com.ryosm.comms.api.ResponseObject;
+import com.google.gson.Gson;
+import com.ryosm.core.com.ryosm.comms.api.requests.RequestLogin;
 import com.ryosm.core.com.ryosm.comms.api.responses.ResponseLogin;
+import com.ryosm.core.com.ryosm.db.PersistentData;
 
 import org.apache.http.message.BasicNameValuePair;
+
+import static com.ryosm.core.com.ryosm.base.CoreLauncherActivity.getCore;
 
 /**
  * Created by revs on 16/10/2016.
  */
 
 public class LoginTask extends MessageTask<ResponseLogin> {
+    protected String username;
     protected String publicKey;
     protected LoginListener loginListener = new NullLoginListener();
 
-    public LoginTask(String url, String message, String nonce, String publicKey, LoginListener loginListener) {
-        super(ResponseLogin.class, url, message, nonce);
-        this.publicKey = publicKey;
-        this.loginListener = loginListener;
-    }
-
-    public LoginTask(String url, String message, String nonce, String publicKey, View loadingView, LoginListener loginListener) {
-        super(ResponseLogin.class, url, message, nonce, loadingView);
-        this.publicKey = publicKey;
+    public LoginTask(String url, String username, RequestLogin request, View loadingView, LoginListener loginListener) {
+        super(ResponseLogin.class, url, request.getMessage(), request.getNonce(), loadingView);
+        this.username = username;
+        this.publicKey = request.getPublicKey();
         this.loginListener = loginListener;
     }
 
     @Override
     public void postTaskExecute() {
-        postTask.execute(new BasicNameValuePair("message", message), new BasicNameValuePair("nonce", nonce), new BasicNameValuePair("publicKey", publicKey));
+        postTask.execute(
+                new BasicNameValuePair("message", message),
+                new BasicNameValuePair("nonce", nonce),
+                new BasicNameValuePair("publicKey", publicKey));
     }
 
     @Override
     public PostListener getExtendedPostListener() {
         return new PostListener() {
             @Override
-            public void onSuccess(Object response, String responseStr) {
-                ((ResponseLogin) response).setResponseStr(responseStr);
-                loginListener.onSuccess((ResponseLogin) response);
+            public void onSuccess(Object resp, String responseStr) {
+                ResponseLogin response = (ResponseLogin) resp;
+                response.setResponseStr(responseStr);
+
+                Gson gson = new Gson();
+                String responseStrDecrypted = getCore().getRyoLibsodium().decryptObject(response);
+                ResponseLogin responseObj = gson.fromJson(responseStrDecrypted, ResponseLogin.class);
+                responseObj.setResponseStr(responseStrDecrypted);
+
+                if (responseObj.getResult().equalsIgnoreCase("True")) {
+                    PersistentData.getSingleton().setUsername(username);
+                    PersistentData.getSingleton().setUserToken(responseObj.getUserToken());
+                    PersistentData.getSingleton().setCsrf(responseObj.getCsrf());
+                }
+
+                loginListener.onSuccess(responseObj);
             }
 
             @Override

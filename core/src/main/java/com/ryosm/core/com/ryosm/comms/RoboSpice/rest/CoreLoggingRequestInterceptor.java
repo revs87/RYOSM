@@ -47,7 +47,7 @@ public class CoreLoggingRequestInterceptor implements ClientHttpRequestIntercept
         L.debug("Status code  : {}" + response.getStatusCode());
         L.debug("Status text  : {}" + response.getStatusText());
         L.debug("Headers      : {}" + response.getHeaders());
-        L.debug("Response body: {}" + inputStringBuilder.toString());
+        L.debug("ResponseObj body: {}" + inputStringBuilder.toString());
         L.debug("=======================response end=================================================");
     }
 }
