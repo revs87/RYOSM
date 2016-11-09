@@ -5,6 +5,7 @@ import android.view.View;
 
 import com.google.gson.Gson;
 import com.ryosm.core.com.ryosm.comms.api.Response;
+import com.ryosm.core.com.ryosm.core.Core;
 import com.ryosm.core.com.ryosm.utils.L;
 
 import org.apache.http.HttpResponse;
@@ -22,14 +23,13 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.ryosm.core.com.ryosm.base.CoreLauncherActivity.getCore;
-
 /**
  * Created by revs on 16/10/2016.
  */
 
 public class PostTask<RESP> extends AsyncTask<NameValuePair, Void, RESP> {
 
+    private Core core;
     private Class<RESP> clazzResp;
     protected String url;
     protected String responseStr;
@@ -46,7 +46,8 @@ public class PostTask<RESP> extends AsyncTask<NameValuePair, Void, RESP> {
     };
     private View loadingView;
 
-    public PostTask(Class<RESP> clazzResp, String url, PostListener postListener, View loadingView) {
+    public PostTask(Core core, Class<RESP> clazzResp, String url, PostListener postListener, View loadingView) {
+        this.core = core;
         this.clazzResp = clazzResp;
         this.url = url;
         if (postListener != null) {
@@ -146,6 +147,10 @@ public class PostTask<RESP> extends AsyncTask<NameValuePair, Void, RESP> {
         } else {
             postListener.onFail(new Exception());
         }
+    }
+
+    public Core getCore() {
+        return core;
     }
 
 }

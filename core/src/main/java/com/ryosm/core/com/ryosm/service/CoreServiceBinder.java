@@ -1,4 +1,4 @@
-package com.ryosm.core.com.ryosm.core;
+package com.ryosm.core.com.ryosm.service;
 
 /**
  * Created by revs on 10/09/2016.

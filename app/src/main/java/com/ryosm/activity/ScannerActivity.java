@@ -1,4 +1,4 @@
-package com.ryosm;
+package com.ryosm.activity;
 
 import android.app.Activity;
 import android.os.Bundle;

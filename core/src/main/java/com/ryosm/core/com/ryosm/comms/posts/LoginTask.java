@@ -5,11 +5,11 @@ import android.view.View;
 import com.google.gson.Gson;
 import com.ryosm.core.com.ryosm.comms.api.requests.RequestLogin;
 import com.ryosm.core.com.ryosm.comms.api.responses.ResponseLogin;
+import com.ryosm.core.com.ryosm.core.Core;
 import com.ryosm.core.com.ryosm.db.PersistentData;
 
 import org.apache.http.message.BasicNameValuePair;
 
-import static com.ryosm.core.com.ryosm.base.CoreLauncherActivity.getCore;
 
 /**
  * Created by revs on 16/10/2016.
@@ -20,8 +20,8 @@ public class LoginTask extends MessageTask<ResponseLogin> {
     protected String publicKey;
     protected LoginListener loginListener = new NullLoginListener();
 
-    public LoginTask(String url, String username, RequestLogin request, View loadingView, LoginListener loginListener) {
-        super(ResponseLogin.class, url, request.getMessage(), request.getNonce(), loadingView);
+    public LoginTask(Core core, String url, String username, RequestLogin request, View loadingView, LoginListener loginListener) {
+        super(core, ResponseLogin.class, url, request.getMessage(), request.getNonce(), loadingView);
         this.username = username;
         this.publicKey = request.getPublicKey();
         this.loginListener = loginListener;

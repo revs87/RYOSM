@@ -1,5 +1,7 @@
 package com.ryosm.base;
 
+import com.ryosm.core.com.ryosm.service.CoreService;
+
 /**
  * Created by revs on 03/03/2016.
  * <p/>
@@ -8,4 +10,11 @@ package com.ryosm.base;
  * Configs.RESTORE_FOREGROUND_PROTECTION must be enabled.
  */
 public class ProtectedBaseActivity extends BaseActivity {
+    public ProtectedBaseActivity(Class<? extends CoreService> serviceClass) {
+        super(serviceClass);
+    }
+
+    public ProtectedBaseActivity(Class<? extends CoreService> serviceClass, Integer layoutId) {
+        super(serviceClass, layoutId);
+    }
 }

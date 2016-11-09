@@ -5,11 +5,11 @@ import android.view.View;
 import com.google.gson.Gson;
 import com.ryosm.core.com.ryosm.comms.api.requests.RequestLogin;
 import com.ryosm.core.com.ryosm.comms.api.responses.ResponseRegister;
+import com.ryosm.core.com.ryosm.core.Core;
 import com.ryosm.core.com.ryosm.db.PersistentData;
 
 import org.apache.http.message.BasicNameValuePair;
 
-import static com.ryosm.core.com.ryosm.base.CoreLauncherActivity.getCore;
 
 /**
  * Created by revs on 16/10/2016.
@@ -19,8 +19,8 @@ public class RegisterTask extends MessageTask<ResponseRegister> {
     protected String publicKey;
     protected RegisterListener registerListener = new NullRegisterListener();
 
-    public RegisterTask(String url, RequestLogin request, View loadingView, RegisterListener registerListener) {
-        super(ResponseRegister.class, url, request.getMessage(), request.getNonce(), loadingView);
+    public RegisterTask(Core core, String url, RequestLogin request, View loadingView, RegisterListener registerListener) {
+        super(core, ResponseRegister.class, url, request.getMessage(), request.getNonce(), loadingView);
         this.publicKey = request.getPublicKey();
         this.registerListener = registerListener;
     }

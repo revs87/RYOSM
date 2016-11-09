@@ -10,6 +10,7 @@ public class CommunicationCenter {
 
 
     public static final String TEST_SERVER_URL = "https://messenger-dev.hackersanonymous.net";
+    public static final String PROD_SERVER_URL = "https://messenger-dev.hackersanonymous.net";
 
     /* -------------------------------------------- */
 
@@ -24,11 +25,7 @@ public class CommunicationCenter {
     }
 
     public static String getBaseUrl() {
-//        if (ConfigData.getEndpoint() != null) {
-//            return ConfigData.getEndpoint();
-//        } else {
         return getServerPath();
-//        }
     }
 
     public static String getDefaultBaseUrl() {

@@ -3,6 +3,7 @@ package com.ryosm.core.com.ryosm.comms.posts;
 import android.view.View;
 
 import com.ryosm.core.com.ryosm.comms.api.Response;
+import com.ryosm.core.com.ryosm.core.Core;
 
 import org.apache.http.message.BasicNameValuePair;
 
@@ -11,31 +12,37 @@ import org.apache.http.message.BasicNameValuePair;
  */
 
 public class MessageTask<RESP> {
+
+    protected Core core;
     protected String message;
     protected String nonce;
     protected PostTask<RESP> postTask;
     protected MessageListener messageListener = new NullMessageListener();
 
-    public MessageTask(Class<RESP> clazzResp, String url, String message, String nonce) {
+    public MessageTask(Core core, Class<RESP> clazzResp, String url, String message, String nonce) {
+        this.core = core;
         this.message = message;
         this.nonce = nonce;
         postTaskInit(clazzResp, url, getExtendedPostListener(), null);
     }
 
-    public MessageTask(Class<RESP> clazzResp, String url, String message, String nonce, View loadingView) {
+    public MessageTask(Core core, Class<RESP> clazzResp, String url, String message, String nonce, View loadingView) {
+        this.core = core;
         this.message = message;
         this.nonce = nonce;
         postTaskInit(clazzResp, url, getExtendedPostListener(), loadingView);
     }
 
-    public MessageTask(Class<RESP> clazzResp, String url, String message, String nonce, MessageListener messageListener) {
+    public MessageTask(Core core, Class<RESP> clazzResp, String url, String message, String nonce, MessageListener messageListener) {
+        this.core = core;
         this.message = message;
         this.nonce = nonce;
         this.messageListener = messageListener;
         postTaskInit(clazzResp, url, getExtendedPostListener(), null);
     }
 
-    public MessageTask(Class<RESP> clazzResp, String url, String message, String nonce, View loadingView, MessageListener messageListener) {
+    public MessageTask(Core core, Class<RESP> clazzResp, String url, String message, String nonce, View loadingView, MessageListener messageListener) {
+        this.core = core;
         this.message = message;
         this.nonce = nonce;
         this.messageListener = messageListener;
@@ -43,7 +50,7 @@ public class MessageTask<RESP> {
     }
 
     public void postTaskInit(Class<RESP> clazzResp, String url, PostListener postListener, View loadingView) {
-        postTask = new PostTask<>(clazzResp, url, postListener, loadingView);
+        postTask = new PostTask<>(getCore(), clazzResp, url, postListener, loadingView);
     }
 
     public void postTaskExecute() {
@@ -82,4 +89,13 @@ public class MessageTask<RESP> {
 
         }
     }
+
+    public Core getCore() {
+        return core;
+    }
+
+    public void setCore(Core core) {
+        this.core = core;
+    }
+
 }

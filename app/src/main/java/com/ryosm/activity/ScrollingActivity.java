@@ -1,4 +1,4 @@
-package com.ryosm;
+package com.ryosm.activity;
 
 import android.app.Activity;
 import android.content.BroadcastReceiver;
@@ -12,6 +12,8 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+
+import com.ryosm.R;
 
 public class ScrollingActivity extends AppCompatActivity {
 

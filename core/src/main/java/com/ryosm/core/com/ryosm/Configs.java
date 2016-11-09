@@ -7,8 +7,8 @@ public class Configs {
     // ----------- ENDPOINTS ---------------
 
     public static final String TEST_SERVER_URL = CommunicationCenter.TEST_SERVER_URL;
-    public static final String QUA_SERVER_URL = "";
-    public static final String PRD_SERVER_URL = "";
+    public static final String QUA_SERVER_URL = CommunicationCenter.TEST_SERVER_URL;
+    public static final String PRD_SERVER_URL = CommunicationCenter.PROD_SERVER_URL;
 
     public static final boolean IS_TEST_SERVER = true;
     public static final boolean IS_QUA_SERVER = false;

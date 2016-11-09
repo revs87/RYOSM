@@ -1,4 +1,4 @@
-package com.ryosm;
+package com.ryosm.activity;
 
 import android.os.Bundle;
 import android.view.View;
@@ -6,6 +6,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.ryosm.R;
+import com.ryosm.RyoService;
 import com.ryosm.core.com.ryosm.CommunicationCenter;
 import com.ryosm.core.com.ryosm.base.CoreLauncherActivity;
 import com.ryosm.core.com.ryosm.comms.api.requests.RequestLogin;
@@ -13,6 +15,7 @@ import com.ryosm.core.com.ryosm.comms.api.responses.ResponseLogin;
 import com.ryosm.core.com.ryosm.comms.api.responses.ResponseRegister;
 import com.ryosm.core.com.ryosm.comms.posts.LoginTask;
 import com.ryosm.core.com.ryosm.comms.posts.RegisterTask;
+import com.ryosm.core.com.ryosm.core.Core;
 import com.ryosm.core.com.ryosm.utils.L;
 
 /**
@@ -28,10 +31,13 @@ public class HomeActivity extends CoreLauncherActivity {
     private EditText usernameEt;
     private EditText passwordEt;
 
+    public HomeActivity() {
+        super(RyoService.class, R.layout.activity_home);
+    }
+
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_home);
+    protected void onServiceBound(Bundle savedInstanceState, Core core) {
+        super.onServiceBound(savedInstanceState, core);
 
         loadingView = findViewById(R.id.loading_view);
         usernameEt = (EditText) findViewById(R.id.home_username_et);
@@ -52,6 +58,7 @@ public class HomeActivity extends CoreLauncherActivity {
                         passwordEt.getText().toString().trim());
 
                 new com.ryosm.core.com.ryosm.comms.posts.LoginTask(
+                        getCore(),
                         CommunicationCenter.getBaseUrl() + "/" + CommunicationCenter.ServiceLogin,
                         usernameEt.getText().toString().trim(),
                         request,
@@ -95,6 +102,7 @@ public class HomeActivity extends CoreLauncherActivity {
                         passwordEt.getText().toString().trim());
 
                 new com.ryosm.core.com.ryosm.comms.posts.RegisterTask(
+                        getCore(),
                         CommunicationCenter.getBaseUrl() + "/" + CommunicationCenter.ServiceRegister,
                         request,
                         loadingView,
@@ -123,4 +131,6 @@ public class HomeActivity extends CoreLauncherActivity {
             }
         });
     }
+
+
 }

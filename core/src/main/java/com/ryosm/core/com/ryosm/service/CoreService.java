@@ -1,25 +1,24 @@
-package com.ryosm.core.com.ryosm.core;
+package com.ryosm.core.com.ryosm.service;
 
-import android.app.Activity;
 import android.app.Notification;
 import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.app.Service;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.content.ServiceConnection;
 import android.net.ConnectivityManager;
 import android.os.Binder;
 import android.os.IBinder;
 import android.provider.Settings;
 import android.support.annotation.Nullable;
 
+import com.f.security.cryptography.SHA1;
+import com.ryosm.core.com.ryosm.core.Core;
+import com.ryosm.core.com.ryosm.core.SocketManager;
+
 /**
  * Created by revs on 10/09/2016.
  */
-public class CoreService extends Service {
-
+public abstract class CoreService extends Service {
 
     private static final int NOTIFICATION_ID = 12341234;
     private Context context;
@@ -29,9 +28,35 @@ public class CoreService extends Service {
     private SocketManager socketManager;
     private boolean foregroundModeEnabled;
     private String androidId;
+    private String serial;
     private Notification.Builder m_notificationBuilder;
 
+
+    private Class<?> launcherActivityClass;
+    private Class<?> homeActivityClass;
+    private Class<?> serviceClass;
+    private String imei;
+
+    public CoreService(final IEnvironmentVariables environmentVariables, final boolean debug, final Class<?> launcherActivityClass, final Class<?> homeActivityClass, final Class<?> serviceClass) {
+        this(environmentVariables, debug ? Environment.DEVELOPMENT : Environment.PRODUCTION, launcherActivityClass, homeActivityClass, serviceClass);
+    }
+
+    public CoreService(final IEnvironmentVariables environmentVariables, final Environment environment, final Class<?> launcherActivityClass, final Class<?> homeActivityClass, final Class<?> serviceClass) {
+        super();
+        this.environmentVariables = environmentVariables;
+        this.environment = environment;
+        this.launcherActivityClass = launcherActivityClass;
+        this.homeActivityClass = homeActivityClass;
+        this.serviceClass = serviceClass;
+
+    }
+
     public CoreService() {
+        super();
+    }
+
+    public CoreService(Class<?> homeActivityClass) {
+        this.homeActivityClass = homeActivityClass;
     }
 
     public CoreService(Context context) {
@@ -41,9 +66,22 @@ public class CoreService extends Service {
         connectivityManager = (ConnectivityManager) context.getSystemService(CONNECTIVITY_SERVICE);
         socketManager = new SocketManager();
 
-        androidId = Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
 
-        core = new Core();
+        core = new Core(this, environmentVariables, environment);
+    }
+
+    @Override
+    public void onCreate() {
+
+        this.context = getApplicationContext();
+        Preferences.setAppContext(context);
+
+        androidId = Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
+        serial = android.os.Build.SERIAL;
+        imei = SHA1.hash(androidId + serial);
+
+        core = new Core(this, environmentVariables, environment);
+
     }
 
     private void showNotification() {
@@ -86,11 +124,37 @@ public class CoreService extends Service {
         return binder;
     }
 
+    public Class<?> getLauncherActivityClass() {
+        return launcherActivityClass;
+    }
+
+    public Class<?> getHomeActivityClass() {
+        return homeActivityClass;
+    }
+
+    public Class<?> getServiceClass() {
+        return serviceClass;
+    }
+
+
+    protected IEnvironmentVariables environmentVariables;
+    private Environment environment;
+
+    public Preferences getPreferences() {
+        return environmentVariables.getPreferences(environment, getBaseContext());
+    }
+
+    public String getImei() {
+        return imei;
+    }
+
+
     public class CoreServiceBinder extends Binder {
         public CoreService getService() {
             return CoreService.this;
         }
     }
+
 
     @Nullable
     @Override
@@ -99,49 +163,9 @@ public class CoreService extends Service {
     }
 
 
-    /**
-     *
-     * */
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         return START_STICKY;
     }
-
-    private CoreService m_service;
-
-    private ServiceConnection m_serviceConnection = new ServiceConnection() {
-        public void onServiceConnected(ComponentName className, IBinder service) {
-            m_service = ((CoreService.CoreServiceBinder) service).getService();
-        }
-
-        public void onServiceDisconnected(ComponentName className) {
-            m_service = null;
-        }
-    };
-
-    public ServiceConnection getM_serviceConnection() {
-        return m_serviceConnection;
-    }
-
-//    private void addNotification(Activity activity) {
-//        // create the notification
-//        m_notificationBuilder = new Notification.Builder(activity)
-//                .setContentTitle("Service name")
-//                .setContentText("service_status_monitor")
-//                .setSmallIcon(android.R.drawable.ic_dialog_alert);
-//
-//        // create the pending intent and add to the notification
-//        Intent intent = new Intent(activity, CoreService.class);
-//        PendingIntent pendingIntent = PendingIntent.getActivity(activity, 0, intent, 0);
-//        m_notificationBuilder.setContentIntent(pendingIntent);
-//
-//        // send the notification
-//        notificationManager.notify(NOTIFICATION_ID, m_notificationBuilder.build());
-//    }
-//
-//    public void addNotificationToForeground(Activity activity) {
-//        addNotification(activity);
-//        startForeground(NOTIFICATION_ID, m_notificationBuilder.build());
-//    }
 
 }
