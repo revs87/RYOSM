@@ -16,6 +16,7 @@ import com.ryosm.core.com.ryosm.comms.api.responses.ResponseRegister;
 import com.ryosm.core.com.ryosm.comms.posts.LoginTask;
 import com.ryosm.core.com.ryosm.comms.posts.RegisterTask;
 import com.ryosm.core.com.ryosm.core.Core;
+import com.ryosm.core.com.ryosm.objects.User;
 import com.ryosm.core.com.ryosm.utils.L;
 
 /**
@@ -84,6 +85,15 @@ public class HomeActivity extends CoreLauncherActivity {
 
                             }
                         }).postTaskExecute();
+
+                
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        //TODO this is just a test
+                        getCore().getDatabaseClient().printUsers();
+                    }
+                });
             }
         });
 
@@ -118,6 +128,12 @@ public class HomeActivity extends CoreLauncherActivity {
                                         );
                                     }
                                 });
+
+                                //TODO this is just a test
+                                getCore().getDatabaseClient().saveUser(new User(
+                                        usernameEt.getText().toString().trim(),
+                                        response.getUserToken()
+                                ));
                             }
 
                             @Override

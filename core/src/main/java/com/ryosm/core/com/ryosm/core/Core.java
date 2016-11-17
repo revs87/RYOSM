@@ -7,6 +7,7 @@ import android.content.pm.PackageManager;
 
 import com.ryosm.core.com.ryosm.base.CoreBaseActivity;
 import com.ryosm.core.com.ryosm.comms.libsodium.RyoLibsodium;
+import com.ryosm.core.com.ryosm.db.DatabaseClient;
 import com.ryosm.core.com.ryosm.service.CoreService;
 import com.ryosm.core.com.ryosm.service.Environment;
 import com.ryosm.core.com.ryosm.service.IEnvironmentVariables;
@@ -23,6 +24,7 @@ public class Core implements SharedPreferences.OnSharedPreferenceChangeListener 
     private CoreService service;
     private RyoLibsodium ryoLibsodium;
     private CoreBaseActivity currentActivity;
+    private DatabaseClient databaseClient;
 
     public Core(CoreService coreService, IEnvironmentVariables environmentVariables, Environment environment) {
         this.environment = environment;
@@ -43,7 +45,9 @@ public class Core implements SharedPreferences.OnSharedPreferenceChangeListener 
 
         }
 
-        ryoLibsodium = new RyoLibsodium();
+        databaseClient = new DatabaseClient(this);
+
+        ryoLibsodium = new RyoLibsodium(this);
     }
 
 
@@ -66,5 +70,17 @@ public class Core implements SharedPreferences.OnSharedPreferenceChangeListener 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
 
+    }
+
+    public CoreService getService() {
+        return service;
+    }
+
+    public DatabaseClient getDatabaseClient() {
+        return databaseClient;
+    }
+
+    public void setDatabaseClient(DatabaseClient databaseClient) {
+        this.databaseClient = databaseClient;
     }
 }

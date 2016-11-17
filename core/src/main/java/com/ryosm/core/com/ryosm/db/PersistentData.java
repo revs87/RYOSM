@@ -1,7 +1,5 @@
 package com.ryosm.core.com.ryosm.db;
 
-import android.content.Context;
-
 /**
  * @description Class used to memory cache management.
  */
@@ -12,7 +10,7 @@ public class PersistentData {
 
     // Persistent Data
     private static PersistentData persistentData;
-    private SQLiteHelper databaseHelper;
+    private SQLiteCoreHelper databaseHelper;
     private String username;
     private String userToken;
     private String csrf;
@@ -33,12 +31,12 @@ public class PersistentData {
         return persistentData;
     }
 
-    public void initDatabaseHelper(Context context) {
-        databaseHelper = new SQLiteHelper(context);
-    }
+//    public void initDatabaseHelper(Context context) {
+//        databaseHelper = new SQLiteCoreHelper(context);
+//    }
 
 
-    public SQLiteHelper getDatabaseHelper() {
+    public SQLiteCoreHelper getDatabaseHelper() {
         return databaseHelper;
     }
 

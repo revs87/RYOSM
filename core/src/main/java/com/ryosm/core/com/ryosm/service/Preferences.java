@@ -80,7 +80,7 @@ public abstract class Preferences {
 
     public void wipe() {
         sharedPreferences.edit().clear().commit();
-        L.e(LOG_TAG, "GF-107 sharedpreferences wiped:" + sharedPreferences.getString("car_reg", "empty"));
+        L.e(LOG_TAG, "Shared preferences wiped");
     }
 
 }

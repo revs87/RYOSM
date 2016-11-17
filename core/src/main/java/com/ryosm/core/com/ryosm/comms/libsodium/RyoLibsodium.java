@@ -7,6 +7,7 @@ import com.ryosm.core.com.ryosm.comms.api.Response;
 import com.ryosm.core.com.ryosm.comms.api.requests.RequestLogin;
 import com.ryosm.core.com.ryosm.comms.api.requests.RequestLoginObj;
 import com.ryosm.core.com.ryosm.comms.api.requests.RequestObject;
+import com.ryosm.core.com.ryosm.core.Core;
 import com.ryosm.core.com.ryosm.utils.L;
 
 import org.libsodium.jni.Sodium;
@@ -22,7 +23,9 @@ import org.libsodium.jni.keys.PublicKey;
  */
 
 public class RyoLibsodium {
+
     private Sodium sodium;
+    private Core core;
 
     // User keys
     private Box identityBox;
@@ -47,9 +50,12 @@ public class RyoLibsodium {
 
     /**
      * Constructor
+     *
+     * @param core
      */
-    public RyoLibsodium() {
-        sodium = new Sodium();
+    public RyoLibsodium(Core core) {
+        this.core = core;
+        this.sodium = new Sodium();
 
         init();
     }
