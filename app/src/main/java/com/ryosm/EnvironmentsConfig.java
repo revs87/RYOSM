@@ -14,7 +14,7 @@ import com.ryosm.core.com.ryosm.service.Preferences;
 
 public class EnvironmentsConfig extends Application implements IEnvironmentVariables {
 
-    private RyoService context;
+    private Context context;
 
     public EnvironmentsConfig() {
     }
@@ -30,12 +30,12 @@ public class EnvironmentsConfig extends Application implements IEnvironmentVaria
         return null;
     }
 
-    @Override
     public Preferences getPreferences(Environment environment, Context context) {
-        return null;
+        return new RyoPreferences(context);
     }
 
-    public void setContext(RyoService context) {
+    public void setContext(Context context) {
         this.context = context;
     }
+
 }

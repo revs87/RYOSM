@@ -17,6 +17,7 @@ import com.ryosm.core.com.ryosm.comms.posts.LoginTask;
 import com.ryosm.core.com.ryosm.comms.posts.RegisterTask;
 import com.ryosm.core.com.ryosm.core.Core;
 import com.ryosm.core.com.ryosm.objects.User;
+import com.ryosm.core.com.ryosm.utils.AndroidUtils;
 import com.ryosm.core.com.ryosm.utils.L;
 
 /**
@@ -86,7 +87,7 @@ public class HomeActivity extends CoreLauncherActivity {
                             }
                         }).postTaskExecute();
 
-                
+
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
@@ -146,6 +147,21 @@ public class HomeActivity extends CoreLauncherActivity {
 
             }
         });
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                long now = AndroidUtils.getNTPTimeInMillis();
+                final String nowStr = AndroidUtils.getNTPUTCDatetime(now);
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        messageTv.setText(nowStr);
+                    }
+                });
+            }
+        }).start();
+
     }
 
 

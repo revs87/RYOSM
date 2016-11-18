@@ -83,4 +83,6 @@ public class Core implements SharedPreferences.OnSharedPreferenceChangeListener 
     public void setDatabaseClient(DatabaseClient databaseClient) {
         this.databaseClient = databaseClient;
     }
+
+
 }

@@ -28,10 +28,6 @@ public class CommunicationCenter {
         return getServerPath();
     }
 
-    public static String getDefaultBaseUrl() {
-        return getServerPath();
-    }
-
     private static String getServerPath() {
         if (Configs.IS_TEST_SERVER) {
             return Configs.TEST_SERVER_URL;
@@ -42,19 +38,5 @@ public class CommunicationCenter {
         }
     }
 
-    public static boolean isConnected(Context context) {
-        ConnectivityManager connectivityManager = (ConnectivityManager) context
-                .getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo wifiInfo = connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
-        NetworkInfo mobileInfo = connectivityManager
-                .getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
-
-        if ((wifiInfo != null && wifiInfo.isConnected())
-                || (mobileInfo != null && mobileInfo.isConnected())) {
-            return true;
-        } else {
-            return false;
-        }
-    }
 
 }

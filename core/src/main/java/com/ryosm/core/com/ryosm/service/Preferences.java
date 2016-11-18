@@ -14,10 +14,9 @@ import java.util.HashMap;
  */
 public abstract class Preferences {
 
-
     protected final SharedPreferences sharedPreferences;
 
-    private static final String LOG_TAG = "Preferences";
+    private static final String LOG_TAG="Dc/Preferences";
     protected static Context appContext = null;
 
     public static Context getAppContext() {
@@ -34,6 +33,24 @@ public abstract class Preferences {
     public Preferences(final Context context) {
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
     }
+
+    public void save(String key, Object value) {
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        if (value instanceof String) {
+            editor = editor.putString(key, (String) value);
+        } else if (value instanceof Integer) {
+            editor = editor.putInt(key, (Integer) value);
+        } else if (value instanceof Long) {
+            editor = editor.putLong(key, (Long) value);
+        } else if (value instanceof Boolean) {
+            editor = editor.putBoolean(key, (Boolean) value);
+        } else {
+            return;
+        }
+        editor.commit();
+    }
+
+    public abstract int getPreferencesResId();
 
     public abstract boolean startServiceOnBoot();
 
