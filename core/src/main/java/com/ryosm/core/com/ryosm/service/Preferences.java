@@ -16,7 +16,7 @@ public abstract class Preferences {
 
     protected final SharedPreferences sharedPreferences;
 
-    private static final String LOG_TAG="Dc/Preferences";
+    private static final String LOG_TAG = "Dc/Preferences";
     protected static Context appContext = null;
 
     public static Context getAppContext() {
@@ -52,6 +52,24 @@ public abstract class Preferences {
 
     public abstract int getPreferencesResId();
 
+
+    public abstract void setAuthenticationToken(final String token);
+
+    public abstract String getAuthenticationToken();
+
+    public abstract String getSecret();
+
+    public abstract void setSecret(final String secret);
+
+    public abstract String getPublicKey();
+
+    public abstract void setPublicKey(final String key);
+
+    public abstract void setCsrf(String csrf);
+
+    public abstract String getCsrf();
+
+
     public abstract boolean startServiceOnBoot();
 
     public abstract void setStartServiceOnBoot(boolean arg);
@@ -61,10 +79,6 @@ public abstract class Preferences {
     public abstract boolean exitDialogDontAskAgain();
 
     public abstract void setExitDialogDontAskAgain(boolean value);
-
-    public abstract void setAuthenticationToken(final String token);
-
-    public abstract String getAuthenticationToken();
 
     public abstract boolean getVerboseLoggingEnabled();
 

@@ -95,6 +95,9 @@ public class HomeActivity extends CoreLauncherActivity {
                         getCore().getDatabaseClient().printUsers();
                     }
                 });
+
+                //TODO
+                getCore().getRyoLibsodium().exportKey(passwordEt.getText().toString().trim());
             }
         });
 

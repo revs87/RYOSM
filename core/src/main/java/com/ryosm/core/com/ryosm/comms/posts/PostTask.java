@@ -16,6 +16,9 @@ import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicHeader;
+import org.apache.http.params.BasicHttpParams;
+import org.apache.http.params.HttpConnectionParams;
+import org.apache.http.params.HttpParams;
 import org.apache.http.protocol.HTTP;
 import org.apache.http.util.EntityUtils;
 
@@ -56,10 +59,16 @@ public class PostTask<RESP> extends AsyncTask<NameValuePair, Void, RESP> {
         this.loadingView = loadingView;
     }
 
+    private static final int CONN_TIMEOUT = 5000;
+    private static final int SO_TIMEOUT = 5000;
+
     @Override
     protected RESP doInBackground(NameValuePair... data) {
-        // New HttpClient and Post Header
-        HttpClient httpClient = new DefaultHttpClient();
+        // New HttpClient and PostHeader
+        HttpParams httpParameters = new BasicHttpParams();
+        HttpConnectionParams.setConnectionTimeout(httpParameters, CONN_TIMEOUT);
+        HttpConnectionParams.setSoTimeout(httpParameters, SO_TIMEOUT);
+        HttpClient httpClient = new DefaultHttpClient(httpParameters);
         HttpPost httpPost = new HttpPost(url);
 
         try {
@@ -106,7 +115,10 @@ public class PostTask<RESP> extends AsyncTask<NameValuePair, Void, RESP> {
              * Print response
              * */
             String responseStatus = response.getStatusLine() + "";
-            String responseStrDecrypted = getCore().getRyoLibsodium().decryptObject((Response) responseJson);
+            String responseStrDecrypted = null;
+            if (responseJson != null) {
+                responseStrDecrypted = getCore().getRyoLibsodium().decryptObject((Response) responseJson);
+            }
             //((Response) response).setResponseStr(responseStrDecrypted);
             L.d("PostTask", "Response(" + responseStatus + "):\n"
                     + "Encrypted:" + body + "\n"

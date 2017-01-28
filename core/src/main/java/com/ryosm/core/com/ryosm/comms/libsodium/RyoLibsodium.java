@@ -1,6 +1,7 @@
 package com.ryosm.core.com.ryosm.comms.libsodium;
 
 import android.util.Base64;
+import android.util.Log;
 
 import com.google.gson.Gson;
 import com.ryosm.core.com.ryosm.comms.api.Response;
@@ -12,7 +13,9 @@ import com.ryosm.core.com.ryosm.utils.L;
 
 import org.libsodium.jni.Sodium;
 import org.libsodium.jni.crypto.Box;
+import org.libsodium.jni.crypto.Hash;
 import org.libsodium.jni.crypto.Random;
+import org.libsodium.jni.crypto.SecretBox;
 import org.libsodium.jni.encoders.Encoder;
 import org.libsodium.jni.keys.KeyPair;
 import org.libsodium.jni.keys.PrivateKey;
@@ -28,9 +31,11 @@ public class RyoLibsodium {
     private Core core;
 
     // User keys
+    private SecretBox secretBox;
     private Box identityBox;
     private PublicKey identityPublicKey;
     private PrivateKey identityPrivateKey;
+    private String password;
 
     // Other X user keys
     private Box xBox;
@@ -44,6 +49,7 @@ public class RyoLibsodium {
     private PrivateKey kpPrivateKey;
 
     // Auxiliary
+    private Hash hash;
     private Random random;
     private Encoder encoder;
 
@@ -64,6 +70,7 @@ public class RyoLibsodium {
      *
      * */
     public RequestLogin getRequestLogin(String username, String password) {
+        createIdentityBox(password);
         generateSessionBox();
 
         RequestLoginObj requestLogin = new RequestLoginObj(
@@ -93,21 +100,163 @@ public class RyoLibsodium {
         /**
          * Create user Box
          * */
-        createIdentityBox();
+//        createIdentityBox(password);
     }
 
     /**
      * Base tool methods
      */
-    public Box createIdentityBox() {
+    public Box createIdentityBox(String password) {
         if (identityBox == null) {
-            KeyPair identity = new KeyPair();
-            identityPublicKey = identity.getPublicKey();
-            identityPrivateKey = identity.getPrivateKey();
-            identityBox = new Box(identityPublicKey, identityPrivateKey);
+            if (core.getPreferences().getSecret() == null) {
+
+                KeyPair identity = new KeyPair();
+                identityPublicKey = identity.getPublicKey();
+                identityPrivateKey = identity.getPrivateKey();
+                identityBox = new Box(identityPublicKey, identityPrivateKey);
+
+                /*
+                * Save and protect privateKey
+                * */
+                String fullEncryptedObjStr = null;
+                try {
+                    fullEncryptedObjStr = exportKey(password);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    return null;
+                }
+                core.getPreferences().setSecret(fullEncryptedObjStr);
+                core.getPreferences().setPublicKey(encode64(identityPublicKey.toBytes()));
+
+            } else {
+
+                /*
+                * Load protected privateKey
+                * */
+                byte[] privateKey = new byte[sodium.crypto_secretbox_keybytes()];
+                try {
+                    privateKey = importKey(password, core.getPreferences().getSecret());
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    return null;
+                }
+                identityPrivateKey = new PrivateKey(privateKey);
+                identityPublicKey = new PublicKey(decode64(core.getPreferences().getPublicKey()));
+                identityBox = new Box(identityPublicKey, identityPrivateKey);
+
+////TODO
+//                byte[] seed;
+//                KeyPair identity = new KeyPair(seed);
+//                identityPublicKey = identity.getPublicKey();
+//                identityPrivateKey = identity.getPrivateKey();
+//                identityBox = new Box(identityPublicKey, identityPrivateKey);
+            }
         }
+        Log.d("createIdentityBox", core.getPreferences().getSecret());
         return identityBox;
     }
+
+    public SecretBox createSecretBox() {
+        secretBox = new SecretBox(identityPrivateKey.toBytes());
+        return secretBox;
+    }
+
+    public String exportKey(String password) {
+        createSecretBox();
+
+        byte[] seed = identityPrivateKey.toBytes();
+        String seedStr = encode64(seed);
+        String obj = "{\"Seed\":\"" + seedStr + "\"}";
+        byte[] salt = generateSalt();
+        byte[] nonce = generateNonce();
+        byte[] passwd = decode64(password);
+
+        byte[] secretKey = new byte[sodium.crypto_secretbox_keybytes()];
+        sodium.crypto_pwhash_scryptsalsa208sha256(
+                secretKey,
+                sodium.crypto_secretbox_keybytes(),
+                passwd,
+                passwd.length,
+                salt,
+                sodium.crypto_pwhash_scryptsalsa208sha256_opslimit_interactive(),
+                sodium.crypto_pwhash_scryptsalsa208sha256_memlimit_interactive());
+
+//        String secretKeyStr = hash.pwhash_scryptsalsa208sha256(
+//                password,
+//                encoder,
+//                salt,
+//                sodium.crypto_pwhash_scryptsalsa208sha256_opslimit_interactive(),
+//                sodium.crypto_pwhash_scryptsalsa208sha256_memlimit_interactive());
+
+        byte[] encryptedObj = new byte[sodium.crypto_secretbox_keybytes()];
+        sodium.crypto_secretbox_easy(
+                encryptedObj,
+                decode64(obj),
+                obj.length(),
+                nonce,
+                secretKey);
+
+//        encryptedObj = secretBox.encrypt(nonce, decode64(obj));
+
+        String fullEncryptedObjStr = "{\"Key\":\"" + encode64(encryptedObj) + "\","
+                + " \"Salt\":\"" + encode64(salt) + "\","
+                + " \"Nonce\":\"" + encode64(nonce) + "\"}";
+
+        L.d("exportKey", fullEncryptedObjStr);
+        return fullEncryptedObjStr;
+    }
+
+    public byte[] importKey(String password, String fullEncryptedObjStr) {
+
+        //TODO parse Key, Salt and Nonce
+        byte[] salt = generateSalt();
+        byte[] nonce = generateNonce();
+
+        byte[] passwd = decode64(password);
+
+        byte[] secretKey = new byte[sodium.crypto_secretbox_keybytes()];
+        sodium.crypto_pwhash_scryptsalsa208sha256(
+                secretKey,
+                sodium.crypto_secretbox_keybytes(),
+                passwd,
+                passwd.length,
+                salt,
+                sodium.crypto_pwhash_scryptsalsa208sha256_opslimit_interactive(),
+                sodium.crypto_pwhash_scryptsalsa208sha256_memlimit_interactive());
+
+        byte[] obj = new byte[sodium.crypto_secretbox_keybytes()];
+        sodium.crypto_secretbox_open_easy(
+                obj,
+                decode64(fullEncryptedObjStr),
+                sodium.crypto_secretbox_keybytes(),
+                nonce,
+                secretKey);
+
+        String seed = encode64(obj);
+        L.d("importKey", seed);
+
+        return new byte[sodium.crypto_secretbox_keybytes()];
+    }
+
+
+    //    function getIdentity(obj){
+//        var password = $('#password').val();
+//        var salt = sodium.from_base64(obj['Salt']);
+//        var nonce = sodium.from_base64(obj['Nonce']);
+//        var secretKey = sodium.crypto_pwhash(sodium.crypto_secretbox_KEYBYTES,password,salt,sodium.crypto_pwhash_OPSLIMIT_INTERACTIVE,sodium.crypto_pwhash_MEMLIMIT_INTERACTIVE,sodium.crypto_pwhash_ALG_ARGON2I13);
+//        try{
+//            var key = sodium.crypto_secretbox_open_easy(sodium.from_base64(obj['Key']),nonce,secretKey);
+//        } catch (e){
+//            $('#status').html("Status: Your password is incorrect or your identity file has been tampered with.");
+//            defer_key.resolve();
+//            return;
+//        }
+//        var objid = JSON.parse(sodium.to_string(key));
+//        identity = sodium.crypto_box_seed_keypair(sodium.from_base64(objid['Seed']));
+//        id_loaded = 1;
+//        $('#status').html("Status: Identity successfully decrypted.");
+//        defer_key.resolve();
+//    }
 
     public Box generateSessionBox() {
         KeyPair kp = new KeyPair();
@@ -118,7 +267,7 @@ public class RyoLibsodium {
     }
 
     public Box generateXBox(String xPublicKeyStr) {
-        createIdentityBox();
+        createIdentityBox(password);
         xPublicKey = new PublicKey(decode64(xPublicKeyStr.getBytes()));
         xBox = new Box(xPublicKey, kpPrivateKey);
         return xBox;
@@ -127,6 +276,11 @@ public class RyoLibsodium {
     public byte[] generateNonce() {
         byte[] nonce = random.randomBytes(sodium.crypto_secretbox_noncebytes());
         return nonce;
+    }
+
+    public byte[] generateSalt() {
+        byte[] salt = random.randomBytes(sodium.crypto_pwhash_scryptsalsa208sha256_saltbytes());
+        return salt;
     }
 
     public String encode64(byte[] byteCode) {

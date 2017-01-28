@@ -6,7 +6,6 @@ import com.google.gson.Gson;
 import com.ryosm.core.com.ryosm.comms.api.requests.RequestLogin;
 import com.ryosm.core.com.ryosm.comms.api.responses.ResponseLogin;
 import com.ryosm.core.com.ryosm.core.Core;
-import com.ryosm.core.com.ryosm.db.PersistentData;
 
 import org.apache.http.message.BasicNameValuePair;
 
@@ -49,9 +48,9 @@ public class LoginTask extends MessageTask<ResponseLogin> {
                 responseObj.setResponseStr(responseStrDecrypted);
 
                 if (responseObj.getResult().equalsIgnoreCase("True")) {
-                    PersistentData.getSingleton().setUsername(username);
-                    PersistentData.getSingleton().setUserToken(responseObj.getUserToken());
-                    PersistentData.getSingleton().setCsrf(responseObj.getCsrf());
+                    core.getPreferences().setUid(username);
+                    core.getPreferences().setAuthenticationToken(responseObj.getUserToken());
+                    core.getPreferences().setCsrf(responseObj.getCsrf());
                 }
 
                 loginListener.onSuccess(responseObj);

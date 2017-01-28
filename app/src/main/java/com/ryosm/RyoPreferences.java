@@ -11,6 +11,7 @@ import com.ryosm.core.com.ryosm.service.Preferences;
 
 public class RyoPreferences extends Preferences {
 
+
     public RyoPreferences(Context context) {
         super(context);
     }
@@ -19,6 +20,56 @@ public class RyoPreferences extends Preferences {
     public int getPreferencesResId() {
         return R.xml.preferences;
     }
+
+    @Override
+    public void setAuthenticationToken(String token) {
+        final SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString("authentication_token", token);
+        editor.commit();
+    }
+
+    @Override
+    public String getAuthenticationToken() {
+        return sharedPreferences.getString("authentication_token", null);
+    }
+
+    @Override
+    public String getSecret() {
+        return sharedPreferences.getString("secret", null);
+    }
+
+    @Override
+    public void setSecret(String secret) {
+        final SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString("secret", secret);
+        editor.commit();
+    }
+
+    @Override
+    public String getPublicKey() {
+        return sharedPreferences.getString("public_key", null);
+    }
+
+    @Override
+    public void setPublicKey(String key) {
+        final SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString("public_key", key);
+        editor.commit();
+    }
+
+    @Override
+    public void setCsrf(String csrf) {
+        final SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString("csrf", csrf);
+        editor.commit();
+    }
+
+    @Override
+    public String getCsrf() {
+        return sharedPreferences.getString("csrf", null);
+    }
+
+    /**/
 
     @Override
     public boolean startServiceOnBoot() {
@@ -50,18 +101,6 @@ public class RyoPreferences extends Preferences {
     }
 
     @Override
-    public void setAuthenticationToken(String token) {
-        final SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putString("authentication_token", token);
-        editor.commit();
-    }
-
-    @Override
-    public String getAuthenticationToken() {
-        return sharedPreferences.getString("authentication_token", null);
-    }
-
-    @Override
     public boolean getVerboseLoggingEnabled() {
         return sharedPreferences.getBoolean("verbose_log", false);
     }
@@ -80,4 +119,5 @@ public class RyoPreferences extends Preferences {
     public boolean getBtActivationEnabled() {
         return sharedPreferences.getBoolean("bt_activation", true);
     }
+
 }
