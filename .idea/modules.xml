@@ -3,8 +3,12 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/RYOSM.iml" filepath="$PROJECT_DIR$/RYOSM.iml" />
+      <module fileurl="file://$PROJECT_DIR$/RYOSM.iml" filepath="$PROJECT_DIR$/RYOSM.iml" />
+      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/core/core.iml" filepath="$PROJECT_DIR$/core/core.iml" />
+      <module fileurl="file://$PROJECT_DIR$/core/core.iml" filepath="$PROJECT_DIR$/core/core.iml" />
+      <module fileurl="file://$PROJECT_DIR$/libsodium-jni-aar-1.0.3-20160925.060828-1/libsodium-jni-aar-1.0.3-20160925.060828-1.iml" filepath="$PROJECT_DIR$/libsodium-jni-aar-1.0.3-20160925.060828-1/libsodium-jni-aar-1.0.3-20160925.060828-1.iml" />
       <module fileurl="file://$PROJECT_DIR$/libsodium-jni-aar-1.0.3-20160925.060828-1/libsodium-jni-aar-1.0.3-20160925.060828-1.iml" filepath="$PROJECT_DIR$/libsodium-jni-aar-1.0.3-20160925.060828-1/libsodium-jni-aar-1.0.3-20160925.060828-1.iml" />
     </modules>
   </component>
